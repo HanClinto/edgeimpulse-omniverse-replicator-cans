@@ -111,7 +111,7 @@ render_product2 = rep.create.render_product(camera2, (1024, 1024))
 
 # Initialize and attach writer
 writer = rep.WriterRegistry.get("BasicWriter")
-writer.initialize(output_dir=f"{output_path}", rgb=True, bounding_box_2d_tight=True)
+writer.initialize(output_dir=f"{output_path}", rgb=True, bounding_box_2d_tight=False)
 writer.attach([render_product, render_product2])
 
 with rep.trigger.on_frame(num_frames=100, rt_subframes=55):
