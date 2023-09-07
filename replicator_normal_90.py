@@ -62,19 +62,17 @@ with rep.new_layer():
         return conveyor
     
 
-    # Define randomizer function for CULTERY assets. This randomization includes placement and rotation of the assets on the surface.
+    # Define randomizer function for CAN assets. This randomization includes placement and rotation of the assets on the surface.
     def cans(size=15):
-        instances = rep.randomizer.instantiate(rep.utils.get_usd_files(
-            current_can), size=size, mode='point_instance')
+        instances = rep.randomizer.instantiate(rep.utils.get_usd_files(current_can), size=size, mode='point_instance')
 
         with instances:
             #rep.randomizer.scatter_2d(conveyor, check_for_collisions=True)
             rep.modify.pose(
-                
-                """position=rep.distribution.uniform(
+                position=rep.distribution.uniform(
                     (-150, 178.05, 10), (0, 178.05, 70)), #(0, 76.3651, 0), (90, 76.3651, 100)),
                 rotation=rep.distribution.uniform(
-                    (-90, -180, 0), (-90, 180, 0)),"""
+                    (-90, -180, 0), (-90, 180, 0))
             )
         return instances.node
 

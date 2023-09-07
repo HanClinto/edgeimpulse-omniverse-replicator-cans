@@ -1,5 +1,4 @@
 import omni.replicator.core as rep
-import carb.settings
 import datetime
 
 with rep.new_layer():
@@ -7,7 +6,7 @@ with rep.new_layer():
     # Load in asset
     local_path = "C:/Users/jplun/Repos/edgeimpulse-omniverse-replicator-cans/"
     CONVEYOR_USD = f"http://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/DigitalTwin/Assets/Warehouse/Equipment/Conveyors/ConveyorBelt_A/ConveyorBelt_A07_PR_NVD_01.usd"
-    #PEPSI_USD = f"{local_path}/assets/Pepsi_Max_can/Pepsi_Can.usd"
+    PEPSI_USD = f"{local_path}/assets/Pepsi_Max_can/Pepsi_Can.usd"
     PEPSI_MAX_USD = f"{local_path}/assets/Pepsi_Max_can/Pepsi_Max.usd"
 
     # Camera paramters
@@ -62,20 +61,18 @@ with rep.new_layer():
         return conveyor
     
 
-    # Define randomizer function for CULTERY assets. This randomization includes placement and rotation of the assets on the surface.
+    # Define randomizer function for CAN assets. This randomization includes placement and rotation of the assets on the surface.
     def cans(size=15):
-        instances = rep.randomizer.instantiate(rep.utils.get_usd_files(
-            current_can), size=size, mode='point_instance')
+        instances = rep.randomizer.instantiate(rep.utils.get_usd_files(current_can), size=size, mode='point_instance')
 
         with instances:
-            #rep.randomizer.scatter_2d(conveyor, check_for_collisions=True)
-            rep.modify.pose(
-                
-                """position=rep.distribution.uniform(
+            rep.randomizer.scatter_2d(conveyor, check_for_collisions=True)
+            """rep.modify.pose(
+                position=rep.distribution.uniform(
                     (-150, 178.05, 10), (0, 178.05, 70)), #(0, 76.3651, 0), (90, 76.3651, 100)),
                 rotation=rep.distribution.uniform(
-                    (-90, -180, 0), (-90, 180, 0)),"""
-            )
+                    (-90, -180, 0), (-90, 180, 0))
+            )"""
         return instances.node
 
     # Register randomization
@@ -105,8 +102,6 @@ with rep.new_layer():
         rep.randomizer.rect_lights(1)
         rep.randomizer.dome_lights(1)
         rep.randomizer.cans(5)
-
-    #carb.settings.get_settings().set(5)
 
     # Run the simulation graph
     rep.orchestrator.run()
