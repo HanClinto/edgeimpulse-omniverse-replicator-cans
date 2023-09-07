@@ -3,21 +3,21 @@ import random
 import datetime
 
 local_path = "C:/Users/jplun/Repos/edgeimpulse-omniverse-replicator-cans/"
-output_path = local_path + '/rendered/' + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S") + '/' + "Multi_Cans"
+output_path = local_path + '/rendered/' + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S") + '/' + "Multi_Cans_Normal_Angle"
+ENV_USD = f"http://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Scenes/Templates/Interior/ZetCG_ExhibitionHall.usd"
 CONVEYOR_USD = f"http://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/DigitalTwin/Assets/Warehouse/Equipment/Conveyors/ConveyorBelt_A/ConveyorBelt_A07_PR_NVD_01.usd"
 PEPSI_USD = f"{local_path}/assets/Pepsi_Can/Pepsi_Can.usd"
 PEPSI_MAX_USD = f"{local_path}/assets/Pepsi_Max_can/Pepsi_Max.usd"
 PEPSI_TALLBOY_USD = f"{local_path}/assets/Pepsi_Tallboy/Pepsi_Tallboy.usd"
 TOTAL_CANS = 6
-CURRENT_CAN = PEPSI_MAX_USD
 
-cans_list = [PEPSI_MAX_USD, PEPSI_TALLBOY_USD]
+cans_list = [PEPSI_MAX_USD] # PEPSI_TALLBOY_USD
 
 # Camera paramters
-cam_position = (-110, 425, 200) #(46, 200, 78)
-cam_position2 = (-100, 425, 240) #(46, 120, 25)
+cam_position = (-110, 198, 200) #(46, 200, 78)
+cam_position2 = (-100, 198, 280) #(46, 120, 25)
 cam_position_random = rep.distribution.uniform((0, 181, 0), (0, 300, 0))
-cam_rotation = (-60, 0, 0)
+cam_rotation = (0, 0, 0)
 focus_distance = 120
 focus_distance2 = 90 #39.1
 focal_length = 40 #27
@@ -50,6 +50,8 @@ def dome_lights(num=3):
     return lights.node
 rep.randomizer.register(dome_lights)
 
+# Create stage environment
+rep.create.from_usd(ENV_USD)
 
 plane1 = rep.create.plane(scale=0.85, visible=False, semantics=[('class', 'plane1')])
 with plane1:
@@ -104,15 +106,15 @@ camera2 = rep.create.camera(focus_distance=focus_distance2, focal_length=focal_l
 
 # Will render 1024x1024 images and 512x512 images
 render_product = rep.create.render_product(camera, (1024, 1024))
-render_product2 = rep.create.render_product(camera2, (512, 512))
+#render_product2 = rep.create.render_product(camera2, (512, 512))
+render_product2 = rep.create.render_product(camera2, (1024, 1024))
 
 # Initialize and attach writer
 writer = rep.WriterRegistry.get("BasicWriter")
-writer.initialize(output_dir=f"{output_path}", # output_dir=f"{local_path}/data/angled_60/{output_path}"
-                    rgb=True, bounding_box_2d_tight=False, semantic_segmentation=False)
+writer.initialize(output_dir=f"{output_path}", rgb=True, bounding_box_2d_tight=False)
 writer.attach([render_product, render_product2])
 
-with rep.trigger.on_frame(num_frames=10, rt_subframes=32):
+with rep.trigger.on_frame(num_frames=100, rt_subframes=55):
     planesList=[('class','plane1'),('class','plane2')]
     with rep.create.group(cans):
         planes=rep.get.prims(semantics=planesList)
