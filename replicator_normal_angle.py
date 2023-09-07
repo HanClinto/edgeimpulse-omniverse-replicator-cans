@@ -114,7 +114,7 @@ writer = rep.WriterRegistry.get("BasicWriter")
 writer.initialize(output_dir=f"{output_path}", rgb=True, bounding_box_2d_tight=False)
 writer.attach([render_product, render_product2])
 
-with rep.trigger.on_frame(num_frames=100, rt_subframes=55):
+with rep.trigger.on_frame(num_frames=50, rt_subframes=55):
     planesList=[('class','plane1'),('class','plane2')]
     with rep.create.group(cans):
         planes=rep.get.prims(semantics=planesList)
