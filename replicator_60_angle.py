@@ -11,9 +11,9 @@ PEPSI_MAX_USD = f"{local_path}/assets/Pepsi_Max_can/Pepsi_Max.usd"
 PEPSI_TALLBOY_USD = f"{local_path}/assets/Pepsi_Tallboy/Pepsi_Tallboy.usd"
 TOTAL_CANS = 6
 
-cans_list = [PEPSI_MAX_USD] #PEPSI_TALLBOY_USD
+cans_list = [PEPSI_MAX_USD] # PEPSI_TALLBOY_USD
 
-# Camera paramters
+# Camera parameters
 cam_position = (-110, 425, 200) #(46, 200, 78)
 cam_position2 = (-100, 425, 220) #(46, 120, 25)
 cam_position_random = rep.distribution.uniform((0, 181, 0), (0, 300, 0))
@@ -98,15 +98,14 @@ for i in range(TOTAL_CANS):
             )
     cans.append(this_can)
 
-# Multiple setup cameras and attach it to render products
+# Multiple setup cameras and attach to render products
 camera = rep.create.camera(focus_distance=focus_distance, focal_length=focal_length,
                             position=cam_position, rotation=cam_rotation, f_stop=f_stop)
 camera2 = rep.create.camera(focus_distance=focus_distance2, focal_length=focal_length2,
                             position=cam_position2, rotation=cam_rotation, f_stop=f_stop)
 
-# Will render 1024x1024 images and 512x512 images
+# Render images
 render_product = rep.create.render_product(camera, (1024, 1024))
-#render_product2 = rep.create.render_product(camera2, (512, 512))
 render_product2 = rep.create.render_product(camera2, (1024, 1024))
 
 # Initialize and attach writer
