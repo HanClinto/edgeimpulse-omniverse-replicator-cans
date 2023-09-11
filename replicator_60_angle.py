@@ -3,15 +3,13 @@ import random
 import datetime
 
 local_path = "C:/Users/jplun/Repos/edgeimpulse-omniverse-replicator-cans/"
-output_path = local_path + '/rendered/' + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S") + '/' + "Multi_Cans_60_Angle"
+output_path = local_path + '/rendered/' + datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S") + '/' + "Multi_Cans_Normal_Angle"
 ENV_USD = f"http://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/Scenes/Templates/Interior/ZetCG_ExhibitionHall.usd"
 CONVEYOR_USD = f"http://omniverse-content-production.s3-us-west-2.amazonaws.com/Assets/DigitalTwin/Assets/Warehouse/Equipment/Conveyors/ConveyorBelt_A/ConveyorBelt_A07_PR_NVD_01.usd"
-PEPSI_USD = f"{local_path}/assets/Pepsi_Can/Pepsi_Can.usd"
-PEPSI_MAX_USD = f"{local_path}/assets/Pepsi_Max_can/Pepsi_Max.usd"
-PEPSI_TALLBOY_USD = f"{local_path}/assets/Pepsi_Tallboy/Pepsi_Tallboy.usd"
-TOTAL_CANS = 6
+GENERIC_USD = f"{local_path}/assets/Generic_Can/Generic_Can.usd"
+TOTAL_CANS = 5
 
-cans_list = [PEPSI_MAX_USD] # PEPSI_TALLBOY_USD
+cans_list = [GENERIC_USD]
 
 # Camera parameters
 cam_position = (-110, 425, 200) #(46, 200, 78)
@@ -75,27 +73,12 @@ cans = list()
 for i in range(TOTAL_CANS):
     random_can = random.choice(cans_list)
     random_can_name = random_can.split(".")[0].split("/")[-1]
-    this_can = rep.create.from_usd(random_can, semantics=[('class', 'can')]) 
-    if random_can_name == "Pepsi_Can":
-        with this_can:
-            rep.modify.pose(
-                position=(0, 0, 0),
-                rotation=(0, -90, -90),
-                scale=(0.001, 0.001, 0.001)
-            )
-    if random_can_name == "Pepsi_Tallboy":
-        with this_can:
-            rep.modify.pose(
-                position=(0, 0, 0),
-                rotation=(0, -90, -90),
-                scale=(0.04, 0.04, 0.04)
-            )
-    else:   
-        with this_can:
-            rep.modify.pose(
-                position=(0, 0, 0),
-                rotation=(0, -90, -90)
-            )
+    this_can = rep.create.from_usd(random_can, semantics=[('class', 'can')])  
+    with this_can:
+        rep.modify.pose(
+            position=(0, 0, 0),
+            rotation=(0, -90, -90)
+        )
     cans.append(this_can)
 
 # Multiple setup cameras and attach to render products
@@ -113,7 +96,7 @@ writer = rep.WriterRegistry.get("BasicWriter")
 writer.initialize(output_dir=f"{output_path}", rgb=True, bounding_box_2d_tight=False)
 writer.attach([render_product, render_product2])
 
-with rep.trigger.on_frame(num_frames=100, rt_subframes=55):
+with rep.trigger.on_frame(num_frames=50, rt_subframes=55):
     planesList=[('class','plane1'),('class','plane2')]
     with rep.create.group(cans):
         planes=rep.get.prims(semantics=planesList)
